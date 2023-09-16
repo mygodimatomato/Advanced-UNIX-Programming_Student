@@ -1,0 +1,2 @@
+Q1. 
+	Yes, it is possible to read the file with the append flag by using lseek. However, it is impossible to write data at teh specific place in the file using lseek under the append flag.
