@@ -13,7 +13,7 @@ void copy_file(const char *source, const char *destination) {
   char buffer[BUFFER_SIZE];
   size_t bytes_read;
   while ((bytes_read = fread(buffer, sizeof(char), BUFFER_SIZE, src_file)) > 0) {
-    fwrite(buffer, 1, bytes_read, dest_file);
+    fwrite(buffer, sizeof(char), bytes_read, dest_file);
   }
 
   fclose(src_file);
