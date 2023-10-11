@@ -2,66 +2,68 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define BUFF_SIZE 100
+
 typedef struct {
   char *data;
   size_t size;
   size_t position;
   const char *mode;
-} memfile_t;
+} mem_file_t;
 
 // Read function for funopen
-int memread(void *cookie, char *buf, int size) {
-  memfile_t *memfile = (memfile_t *)cookie;
+int mem_read(void *cookie, char *buf, int size) {
+  mem_file_t *mem_file = (mem_file_t *)cookie;
 
   // Todo : Check if the file is opened in read mode
   
   // If the size of the read is bigger than the size of the file, read the rest of the whole file
-  if (memfile->position + size > memfile->size) {
-    size = memfile->size - memfile->position;
+  if (mem_file->position + size > mem_file->size) {
+    size = mem_file->size - mem_file->position;
   }
-  memcpy(buf, memfile->data + memfile->position, size);
-  memfile->position += size;
+  memcpy(buf, mem_file->data + mem_file->position, size);
+  mem_file->position += size;
   return size;
 }
 
 // Write function for funopen
-int memwrite(void *cookie, const char *buf, int size) {
-  memfile_t *memfile = (memfile_t *)cookie;
+int mem_write(void *cookie, const char *buf, int size) {
+  mem_file_t *mem_file = (mem_file_t *)cookie;
 
   // Todo : Check if the file is opened in write mode
 
   // there is no space left for writing
-  if (memfile->position + size > memfile->size) {
+  if (mem_file->position + size > mem_file->size) {
     return -1;
   }
-  memcpy(memfile->data + memfile->position, buf, size);
-  memfile->position += size;
+  memcpy(mem_file->data + mem_file->position, buf, size);
+  mem_file->position += size;
   return size;
 }
 
 // Seek function for funopen
-fpos_t memseek(void *cookie, fpos_t offset, int whence){
-  memfile_t *memfile = (memfile_t *)cookie;
+fpos_t mem_seek(void *cookie, fpos_t offset, int whence){
+  mem_file_t *mem_file = (mem_file_t *)cookie;
 
   switch (whence) {
     case SEEK_SET:
-      memfile->position = offset;
+      mem_file->position = offset;
       break;
     case SEEK_CUR:
-      memfile->position += offset;
+      mem_file->position += offset;
       break;
     case SEEK_END:
-      memfile->position = memfile->size + offset;
+      mem_file->position = mem_file->size + offset;
       break;
     default:
       return -1;
   }
 
-  return memfile->position;
+  return mem_file->position;
 }
 
 // Close function for funopen
-int memclose(void *cookie){
+int mem_close(void *cookie){
   if (cookie == NULL)
     return -1;
   free(cookie);
@@ -71,24 +73,35 @@ int memclose(void *cookie){
 
 // done
 FILE *fmemopen(void *buf, size_t size, const char *mode){
-  memfile_t *memfile = malloc(sizeof(memfile_t));
-  memfile->data = buf;
-  memfile->size = size;
-  memfile->position = 0;
-  memfile->mode = mode;
+  mem_file_t *mem_file = malloc(sizeof(mem_file_t));
+  mem_file->data = buf;
+  mem_file->size = size;
+  mem_file->position = 0;
+  mem_file->mode = mode;
 
-  return funopen(memfile, memread, memwrite, memseek, memclose);
+  return funopen(mem_file, mem_read, mem_write, mem_seek, mem_close);
 }
 
 int main() {
 
   // expected execution : Write -> Seek -> Read -> ( Seek -> Read ) -> Close
-  char buffer[100] = {0};
+  char buffer[BUFF_SIZE] = {0};
 
-  FILE *memstream = fmemopen(buffer, sizeof(buffer), "w+");
-  memseek(memstream, 7, SEEK_SET);
+  FILE *mem_stream = fmemopen(buffer, sizeof(buffer), "w+"); // not sure if we only need w+
+  
+  mem_write(mem_stream, "hello world\n", 12);
 
+  mem_seek(mem_stream, 7, SEEK_SET);
 
+  mem_read(mem_stream, buffer, 5);
+  printf("%s\n", buffer);
+
+  mem_seek(mem_stream, 0, SEEK_SET);
+
+  mem_read(mem_stream, buffer, 12);
+  printf("%s\n", buffer);
+
+  mem_close(mem_stream);
   return 0;
 }
 
