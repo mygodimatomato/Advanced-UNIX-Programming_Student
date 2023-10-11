@@ -8,7 +8,6 @@ typedef struct {
   char *data;
   size_t size;
   size_t position;
-  const char *mode;
 } mem_file_t;
 
 // Read function for funopen
@@ -16,12 +15,15 @@ int mem_read(void *cookie, char *buf, int size) {
   mem_file_t *mem_file = (mem_file_t *)cookie;
 
   // Todo : Check if the file is opened in read mode
-  
+
   // If the size of the read is bigger than the size of the file, read the rest of the whole file
   if (mem_file->position + size > mem_file->size) {
     size = mem_file->size - mem_file->position;
   }
-  memcpy(buf, mem_file->data + mem_file->position, size);
+
+  for (int i = 0; i < size; i++){
+    buf[i] = mem_file->data[mem_file->position + i];
+  }
   mem_file->position += size;
   return size;
 }
@@ -34,10 +36,18 @@ int mem_write(void *cookie, const char *buf, int size) {
 
   // there is no space left for writing
   if (mem_file->position + size > mem_file->size) {
+    printf("%d, %d\n", (int)mem_file->position + size, (int)mem_file->size);
     return -1;
   }
-  memcpy(mem_file->data + mem_file->position, buf, size);
+  // memcpy(mem_file->data + mem_file->position, buf, size);
+
+  for (int i = 0; i < size; i++){
+    mem_file->data[mem_file->position + i] = buf[i];
+  }
   mem_file->position += size;
+
+  // printf("Finish Writing to the file\n");
+  // printf("%s", (char *)mem_file->data);
   return size;
 }
 
@@ -66,6 +76,8 @@ fpos_t mem_seek(void *cookie, fpos_t offset, int whence){
 int mem_close(void *cookie){
   if (cookie == NULL)
     return -1;
+
+  printf("Closing the file\n");
   free(cookie);
 
   return 0;
@@ -77,31 +89,35 @@ FILE *fmemopen(void *buf, size_t size, const char *mode){
   mem_file->data = buf;
   mem_file->size = size;
   mem_file->position = 0;
-  mem_file->mode = mode;
 
+  // printf("%d\n", (int)mem_file->size);
   return funopen(mem_file, mem_read, mem_write, mem_seek, mem_close);
 }
 
 int main() {
-
   // expected execution : Write -> Seek -> Read -> ( Seek -> Read ) -> Close
-  char buffer[BUFF_SIZE] = {0};
+  char *buffer = malloc(sizeof(char) * BUFF_SIZE);
+  char output_buffer[BUFF_SIZE] = {0};
 
-  FILE *mem_stream = fmemopen(buffer, sizeof(buffer), "w+"); // not sure if we only need w+
-  
-  mem_write(mem_stream, "hello world\n", 12);
+  FILE *mem_stream = fmemopen(buffer, BUFF_SIZE, "w+"); // not sure if we only need w+
 
-  mem_seek(mem_stream, 7, SEEK_SET);
+  mem_file_t *tmp = (mem_file_t *)mem_stream->_cookie;
+  // printf("%d\n", (int)tmp->size);
 
-  mem_read(mem_stream, buffer, 5);
-  printf("%s\n", buffer);
+  int out = mem_write(mem_stream->_cookie, "hello world\n", 12);
+  // printf("Write %d bytes\n", out);
 
-  mem_seek(mem_stream, 0, SEEK_SET);
+  mem_seek(mem_stream->_cookie, 6, SEEK_SET);
 
-  mem_read(mem_stream, buffer, 12);
-  printf("%s\n", buffer);
+  mem_read(mem_stream->_cookie, output_buffer, 5);
+  printf("%s\n", output_buffer);
 
-  mem_close(mem_stream);
+  mem_seek(mem_stream->_cookie, 0, SEEK_SET);
+
+  mem_read(mem_stream->_cookie, output_buffer, 12);
+  printf("%s", output_buffer);
+
+  free(mem_stream->_cookie);
   return 0;
 }
 
