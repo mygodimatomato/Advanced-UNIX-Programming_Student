@@ -147,16 +147,16 @@ int main() {
 
   */
 
-  int out = fwrite("hello world\n", 1, 12, mem_stream);
+  int out = fwrite("hello, world\n", 1, 13, mem_stream);
 
-  fseek(mem_stream, 6, SEEK_SET);
+  fseek(mem_stream, 7, SEEK_SET);
 
   fread(output_buffer, 1, 5, mem_stream);
   printf("%s\n", output_buffer);
 
   fseek(mem_stream, 0, SEEK_SET);
 
-  fread(output_buffer, 1, 12, mem_stream);
+  fread(output_buffer, 1, 13, mem_stream);
   printf("%s", output_buffer);
 
   fclose(mem_stream);

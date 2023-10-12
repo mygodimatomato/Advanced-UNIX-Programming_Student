@@ -154,17 +154,17 @@ int main() {
   mem_file_t *tmp = (mem_file_t *)mem_stream->_cookie;
   // printf("%d\n", (int)tmp->size);
 
-  int out = mem_write(mem_stream->_cookie, "hello world\n", 12);
+  int out = mem_write(mem_stream->_cookie, "hello, world\n", 13);
   // printf("Write %d bytes\n", out);
 
-  mem_seek(mem_stream->_cookie, 6, SEEK_SET);
+  mem_seek(mem_stream->_cookie, 7, SEEK_SET);
 
   mem_read(mem_stream->_cookie, output_buffer, 5);
   printf("%s\n", output_buffer);
 
   mem_seek(mem_stream->_cookie, 0, SEEK_SET);
 
-  mem_read(mem_stream->_cookie, output_buffer, 12);
+  mem_read(mem_stream->_cookie, output_buffer, 13);
   printf("%s", output_buffer);
 
   free(mem_stream->_cookie);
