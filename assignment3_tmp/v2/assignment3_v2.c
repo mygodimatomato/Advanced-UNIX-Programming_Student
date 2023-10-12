@@ -30,20 +30,17 @@ int mem_read(void *cookie, char *buf, int size) {
 int mem_write(void *cookie, const char *buf, int size) {
   mem_file_t *mem_file = (mem_file_t *)cookie;
 
-  // there is no space left for writing
+  // If there is no space left for writing -> return -1
   if (mem_file->position + size > mem_file->size) {
     printf("%d, %d\n", (int)mem_file->position + size, (int)mem_file->size);
     return -1;
   }
-  // memcpy(mem_file->data + mem_file->position, buf, size);
 
   for (int i = 0; i < size; i++){
     mem_file->data[mem_file->position + i] = buf[i];
   }
   mem_file->position += size;
 
-  // printf("Finish Writing to the file\n");
-  // printf("%s", (char *)mem_file->data);
   return size;
 }
 
@@ -73,7 +70,6 @@ int mem_close(void *cookie){
   if (cookie == NULL)
     return -1;
 
-  printf("Closing the file\n");
   free(cookie);
 
   return 0;
@@ -86,7 +82,6 @@ FILE *fmemopen(void *buf, size_t size, const char *mode){
   mem_file->size = size;
   mem_file->position = 0;
 
-  // printf("%d\n", (int)mem_file->size);
   return funopen(mem_file, mem_read, mem_write, mem_seek, mem_close);
 }
 
@@ -115,30 +110,18 @@ int main() {
 
   */
 
-  mem_file_t *tmp = (mem_file_t *)mem_stream->_cookie;
-  // printf("%d\n", (int)tmp->size);
+  int out = fwrite("hello world\n", 1, 12, mem_stream);
 
-  int out = mem_write(mem_stream->_cookie, "hello world\n", 12);
-  // printf("Write %d bytes\n", out);
+  fseek(mem_stream, 6, SEEK_SET);
 
-  mem_seek(mem_stream->_cookie, 6, SEEK_SET);
-
-  mem_read(mem_stream->_cookie, output_buffer, 5);
+  fread(output_buffer, 1, 5, mem_stream);
   printf("%s\n", output_buffer);
 
-  mem_seek(mem_stream->_cookie, 0, SEEK_SET);
+  fseek(mem_stream, 0, SEEK_SET);
 
-  mem_read(mem_stream->_cookie, output_buffer, 12);
+  fread(output_buffer, 1, 12, mem_stream);
   printf("%s", output_buffer);
 
-  free(mem_stream->_cookie);
+  fclose(mem_stream);
   return 0;
 }
-
-/*
-funopen(const  void  *cookie, 
-        int    (*readfn)(void  *,  char  *,	 int),
-        int	   (*writefn)(void     *,     const	char	 *,	 int),
-        fpos_t (*seekfn)(void *, fpos_t, int), 
-        int    (*closefn)(void *));
-*/
