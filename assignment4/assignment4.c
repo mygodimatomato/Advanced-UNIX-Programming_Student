@@ -19,10 +19,10 @@ int main() {
 
   // Format the time using strftime
   strftime(buffer, 80, "%a %b %d %H:%M:%S %Z %Y", timeinfo);
-  printf("Asia/Taipei time:%s\n", buffer);
+  printf("%s\n", buffer);
 
   // Change the time zone to America/New_York
-  setenv("TZ", "America/New_York", 1);
+  setenv("TZ", "PST8PDT", 1);
   tzset();
 
   // Obtain the current time again
@@ -33,7 +33,7 @@ int main() {
 
   // Format the time using strftime
   strftime(buffer, 80, "%a %b %d %H:%M:%S %Z %Y", timeinfo);
-  printf("America/New_York time:%s\n", buffer);
+  printf("%s\n", buffer);
 
   return 0;
 }
