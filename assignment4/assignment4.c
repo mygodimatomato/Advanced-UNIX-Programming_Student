@@ -13,9 +13,11 @@ int main() {
 
   // Obtain the current time
   time(&rawtime);
+  // printf("rawtime: %ld\n", rawtime);
 
   // Convert it to local time
   timeinfo = localtime(&rawtime);
+  // printf("timeinfo: %ld\n", timeinfo);
 
   // Format the time using strftime
   strftime(buffer, 80, "%a %b %d %H:%M:%S %Z %Y", timeinfo);
