@@ -33,7 +33,7 @@ int main() {
 
   // Format the time using strftime
   strftime(buffer, 80, "%a %b %d %H:%M:%S %Z %Y", timeinfo);
-  printf("%s\n", buffer);
+  // printf("%s\n", buffer);
 
   return 0;
 }
