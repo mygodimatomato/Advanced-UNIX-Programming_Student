@@ -4,7 +4,7 @@
 #include <string.h>
 
 int main() {
-  int fd = open("sample.txt", O_RDWR); // Open file with read-write permissions
+  int fd = open("sample.txt", O_WRONLY); // Open file with read-write permissions
   // int fd = open("sample.txt", O_APPEND); // Open file with append permissions
   if (fd == -1) {
     perror("Failed to open file");

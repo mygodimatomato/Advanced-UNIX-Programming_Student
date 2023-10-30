@@ -1,8 +1,8 @@
 CC = gcc
 CFLAG = -std=c11 -O2 -Wall
-TARGET = q2
-SRCS = q2.c 
-OBJS = q2.o 
+TARGET = q1 q2
+SRCS = q1.c 
+OBJS = q1.o 
 
 all: $(TARGET)
 
