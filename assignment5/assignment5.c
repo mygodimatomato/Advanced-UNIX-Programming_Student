@@ -1,24 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
-int f1 (int *val, int **pptr) {
-
-  *pptr = val;
-  return (**pptr + 1); // this is a int
+int* f1(int* val)
+{
+	return &(*val);
 }
 
-int main()
-{
-  int val = 5;
-  int *ptr_to_val;
-  int tmp = f1(&val, &ptr_to_val);
-
-  
-  printf("Value %d is at %p\n", *ptr_to_val, (void *)ptr_to_val);
-  // printf("Value %d is at %p\n", val, &val);
-  // printf("Value %d is at %p\n", tmp, &tmp);
-
-  return 0;
+int main() {
+	int *val = malloc(sizeof(int));
+	*val = 5;
+	int* valp = f1(val);
+	printf("Value %i is at %p\n", *val, valp);
+	// printf("%p\n", val);
 }
