@@ -33,7 +33,7 @@ int main(void) {
     char buf[1024];
     while (fgets(buf, sizeof(buf), ps_output) != NULL) {
       // Check if the process state is 'Z' for zombie
-      if (strstr(buf, " Z ")) {
+      if (strstr(buf, "Z")) {
         printf("Zombie process found: %s", buf);
         // This is where we verify that the child is a zombie process
       }
