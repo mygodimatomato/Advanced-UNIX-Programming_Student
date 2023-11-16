@@ -22,14 +22,6 @@ int main() {
       exit(1);
     }
 
-    // Fetch and display process IDs
-    // pid = getpid();
-    // pgrp = getpgrp();
-    // tpgid = tcgetpgrp(STDIN_FILENO);
-
-    //  printf("%10s %10s %10s\n","PID","PGRP","TPGID");
-    // printf("%10d %10d %10d\n", pid, pgrp, tpgid);
-
     // Infinite loop to keep the process running, allowing you to run `ps`
     while(1) {
       sleep(1);
