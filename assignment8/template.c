@@ -63,10 +63,17 @@ static void WAIT_CHILD(void)
 
 static int increment_counter(FILE *const file)
 {
-    /* TODO */
+    int fn = fileno(file);
+    char buf[4];
+    ssize_t n = pread(fn,buf,3,0);
+    buf[n]='\0';
+    printf("%i %s\n",n,buf);
+    return 0;
 }
 
 int main(void)
 {
-    /* TODO */
+    FILE *numfile = fopen("num.txt","r+");
+    fputs("0",numfile);
+    increment_counter(numfile);
 }
