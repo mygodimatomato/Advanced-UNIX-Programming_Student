@@ -89,8 +89,8 @@ int main(void)
 	exit(1);
     }
 
+    TELL_WAIT();
     if (pid == 0) { // Child
-        TELL_WAIT();
 	while (1) {
 	  int n = increment_counter(numfile);
           printf("Child increments counter to %i\n",n);
@@ -98,7 +98,6 @@ int main(void)
           WAIT_PARENT(); 
 	}
     } else { // Parent
-        TELL_WAIT();
         while (1) {
             WAIT_CHILD();
             int n = increment_counter(numfile);
