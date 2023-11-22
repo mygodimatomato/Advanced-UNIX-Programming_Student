@@ -93,7 +93,7 @@ int main(void)
     if (pid == 0) { // Child
 	while (1) {
 	  int n = increment_counter(numfile);
-          printf("Child increments counter to %i\n",n);
+          printf("Child incrementing, value: %i\n",n);
           TELL_PARENT();
           WAIT_PARENT(); 
 	}
@@ -101,7 +101,7 @@ int main(void)
         while (1) {
             WAIT_CHILD();
             int n = increment_counter(numfile);
-            printf("Parent increments counter to %i\n",n);
+            printf("Parent incrementing, value: %i\n",n);
             if (n == 100) {
                 kill(pid, SIGKILL);
                 exit(0);
