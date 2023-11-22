@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
@@ -74,14 +75,40 @@ static int increment_counter(FILE *const file)
     char nbuf[4];
     n = sprintf(nbuf,"%i",num+1);
     n = pwrite(fn,nbuf,n,0);
-    return num;
+    return num+1;
 }
 
 int main(void)
 {
     FILE *numfile = fopen("num.txt","w+");
     int fn = fileno(numfile);
-    pwrite(fn,"0",2,0);
+    pwrite(fn,"0",1,0);
+    pid_t pid = fork();
+    if (pid < 0) {
+	perror("fork failed");
+	exit(1);
+    }
 
+    if (pid == 0) { // Child
+        TELL_WAIT();
+	while (1) {
+	  int n = increment_counter(numfile);
+          printf("Child increments counter to %i\n",n);
+          TELL_PARENT();
+          WAIT_PARENT(); 
+	}
+    } else { // Parent
+        TELL_WAIT();
+        while (1) {
+            WAIT_CHILD();
+            int n = increment_counter(numfile);
+            printf("Parent increments counter to %i\n",n);
+            if (n == 100) {
+                kill(pid, SIGKILL);
+                exit(0);
+            }
+            TELL_CHILD(pid);
+        }
+    }
 
 }
