@@ -50,5 +50,7 @@ int main() {
     for(int i=0;i<5; i++) {
         pthread_join(pt[i],NULL);
     }
+
+    pthread_mutex_destroy(&b.mutex);
     return 0;
 }
