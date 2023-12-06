@@ -52,18 +52,18 @@ int main(int argc, char const *argv[])
 
 struct ListNode* append_node(struct ListNode* head, int val){
 	if(head == NULL){
-		struct ListNode newNode;
-		newNode.val = val;
-		newNode.next = NULL;
-		head = &newNode;
+		struct ListNode *newNode = (struct ListNode *)malloc(sizeof(struct ListNode)); // immediate variable, needs a malloc call to be allocated on heap
+		newNode->val = val;
+		newNode->next = NULL;
+		head = newNode;
 		return head;	
 	}else { 
-		struct ListNode newNode;
+		struct ListNode *newNode = (struct ListNode *)malloc(sizeof(struct ListNode)); // same as above, requires a malloc call for heap allocation
 		struct ListNode *tail = head;
 		while(tail->next != NULL)tail = tail->next; 
-		newNode.val = val;
-		tail->next = &newNode;
-		newNode.next = NULL;
+		newNode->val = val;
+		tail->next = newNode;
+		newNode->next = NULL;
 	}
 	return head;
 }
