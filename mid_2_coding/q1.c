@@ -26,6 +26,7 @@ int main(int argc, char* argv[])
 			time(&current_time);
 			tmptr = localtime(&current_time);
 			fprintf(file, "%d\n", tmptr->tm_sec);
+			printf("%d\n", tmptr->tm_sec);
 			fclose(file);
 		}
 	}
