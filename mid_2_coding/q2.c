@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string.h> 
 
 void find_and_print_links(const char *path) {
   DIR *dir;
