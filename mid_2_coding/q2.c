@@ -48,6 +48,10 @@ void find_and_print_links(const char *path) {
 }
 
 int main(int argc, char *argv[])  {
+  if (argc != 2) {
+    fprintf(stderr, "You must provide exactly one argument for the given path\n");
+    return 1;
+  }
   find_and_print_links(argv[1]);
   return 0;
 }
