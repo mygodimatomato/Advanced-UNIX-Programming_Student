@@ -1,10 +1,7 @@
 all: build
 
-build: assignment11.o daemonize.o
-	gcc -o assignment11 assignment11.o daemonize.o
+CFLAGS= -g -Wall
 
-assgt: assignment11.c
-	gcc assignment11.c -o assignment11.o -c
+build: assignment11.c
+	gcc ${CFLAGS} -o assignment11 assignment11.c
 
-daemon: daemonize.c
-	gcc daemonize.c -o daemonize.o -c
