@@ -89,13 +89,15 @@ void daemonize(const char *cmd)
 }
 
 int main() {
-    daemonize("logs");
-    printf("running main");
+    daemonize("my-daemon-logs");
     char* login = getlogin();
     FILE* fl = fopen("assignment11.txt","w");
     if(fl) {
         fprintf(fl,"Login name: %s",login);
-    } else puts("Error opening assignment11.txt");
+    } else {
+        syslog(LOG_ERR, "Error on opening assignment11.txt, Loging name: %s", login);
+		puts("Error opening assignment11.txt");
+	}
     return 0;
 }
 
