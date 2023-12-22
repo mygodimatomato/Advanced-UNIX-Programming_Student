@@ -45,10 +45,17 @@ int main(int argc, char *argv[])
 		/* TODO: Copy the file using mmap here */
                 src = mmap(0, copysz, PROT_READ, MAP_SHARED, fdin, fsz);
                 dst = mmap(0, copysz, PROT_WRITE, MAP_SHARED, fdout, fsz);
+                //int err = close(fdin);
+                //if(err != 0) puts("ErrIn");
+                //err = close(fdout);
+                //if(err != 0) puts("ErrOut");
                 memcpy(dst, src, copysz);
                 munmap(dst, copysz);
                 munmap(src, copysz);
                 fsz += copysz;
 	}
+
+        //close(fdin);
+        //close(fdout);
 	exit(0); 
 }
