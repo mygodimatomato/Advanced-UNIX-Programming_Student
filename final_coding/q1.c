@@ -8,7 +8,7 @@
 
 
 // T1 needs to handle the signal SIGINT
-void *T1(void *arg){
+void *T1_handler(void *arg){
   sigset_t set;
   int sig;
   sigemptyset(&set);
@@ -20,7 +20,7 @@ void *T1(void *arg){
 }
 
 // T2 needs to handle the signal SIGTERM
-void *T2(void *arg){
+void *T2_handler(void *arg){
   sigset_t set;
   int sig;
   sigemptyset(&set);
@@ -32,7 +32,7 @@ void *T2(void *arg){
 }
 
 // T3 needs to handle the signal SIGUSR1
-void *T3(void *arg){
+void *T3_handler(void *arg){
   sigset_t set;
   int sig;
   sigemptyset(&set);
@@ -51,9 +51,9 @@ int main(){
 
   // initialize the thread
   pthread_t T1, T2, T3;
-  pthread_create(&T1, NULL, T1, NULL);
-  pthread_create(&T2, NULL, T2, NULL);
-  pthread_create(&T3, NULL, T3, NULL);
+  pthread_create(&T1, NULL, T1_handler, NULL);
+  pthread_create(&T2, NULL, T2_handler, NULL);
+  pthread_create(&T3, NULL, T3_handler, NULL);
 
   return 0;
 }
