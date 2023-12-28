@@ -23,6 +23,6 @@ int main(int argc, char* argv[]) {
     sleep_us(scs);
     gettimeofday(&nt, NULL);
     long int fin = (nt.tv_sec-ct.tv_sec)*1000000l+(nt.tv_usec-ct.tv_usec);
-    printf("Sleep time: %lld us\n",fin);
+    printf("Sleep time: %ld us\n",fin);
     return 0;
 }
